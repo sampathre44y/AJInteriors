@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 50 300 360">
+  <polygon points="125,155 225,80 225,285 125,285" fill="#F4C563"/>
+  <path d="M 138 320 L 138 170 L 250 85 L 362 170 L 362 270" fill="none" stroke="#000" stroke-width="10" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  <path d="M 132 320 L 260 320" fill="none" stroke="#000" stroke-width="10"/>
+  <text x="165" y="305" font-family="Times New Roman, serif" font-size="180" fill="#000">A</text>
+  <text x="265" y="305" font-family="Times New Roman, serif" font-size="180" fill="#000">J</text>
+  <text x="250" y="375" font-family="Arial, sans-serif" font-size="18" font-weight="300" letter-spacing="2" text-anchor="middle" fill="#000">INTERIOR DESIGN STUDIO</text>
+</svg>

@@ -1,0 +1,80 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "An interior design project portfolio item.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the project."
+        },
+        "room_type": {
+          "type": "string",
+          "description": "The type of room (e.g., Living Room, Kitchen)."
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Array of image or video URLs."
+        },
+        "description": {
+          "type": "string",
+          "description": "A summary or description of the project."
+        },
+        "testimonial": {
+          "type": "string",
+          "description": "A client testimonial."
+        },
+        "mediaType": {
+          "type": "string",
+          "enum": ["image", "video"],
+          "description": "The type of media (image or video)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the project was created."
+        },
+        "authorUid": {
+          "type": "string",
+          "description": "The UID of the admin who created the project."
+        }
+      },
+      "required": ["title", "room_type", "images", "description", "testimonial", "mediaType", "createdAt", "authorUid"]
+    },
+    "User": {
+      "title": "User",
+      "description": "A user of the application.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "user"]
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": {
+        "$ref": "#/entities/Project"
+      },
+      "description": "Collection of interior design projects."
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Collection of users and their roles."
+    }
+  }
+}
