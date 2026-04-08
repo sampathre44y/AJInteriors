@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 0 400 500">
+  <polygon points="125,155 225,80 225,285 125,285" fill="#F4C563"/>
+  <path d="M 138 320 L 138 170 L 250 85 L 362 170 L 362 270" fill="none" stroke="#fff" stroke-width="10" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  <path d="M 132 320 L 260 320" fill="none" stroke="#fff" stroke-width="10"/>
+  <text x="165" y="305" font-family="Times New Roman, serif" font-size="180" fill="#fff">A</text>
+  <text x="265" y="305" font-family="Times New Roman, serif" font-size="180" fill="#fff">J</text>
+  <text x="250" y="375" font-family="Arial, sans-serif" font-size="18" font-weight="300" letter-spacing="2" text-anchor="middle" fill="#fff">INTERIOR DESIGN STUDIO</text>
+  
+  <text x="250" y="430" font-family="Arial, sans-serif" font-size="24" font-weight="bold" letter-spacing="1" text-anchor="middle" fill="#fff">BUILD YOUR DREAM HOME</text>
+  <text x="250" y="475" font-family="Arial, sans-serif" font-size="42" font-weight="bold" letter-spacing="2" text-anchor="middle" fill="#fff">WITH US</text>
+</svg>

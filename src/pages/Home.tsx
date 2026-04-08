@@ -1,10 +1,12 @@
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Instagram } from 'lucide-react';
+import { ArrowRight, Instagram, Facebook, Youtube, MessageCircle } from 'lucide-react';
 import { MOCK_TEAM } from '../lib/data';
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from '../lib/errorHandling';
+import MediaRenderer from '../components/MediaRenderer';
 
 function AutoSlidingImage({ images, projectId }: { images: string[], projectId: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -22,16 +24,15 @@ function AutoSlidingImage({ images, projectId }: { images: string[], projectId: 
 
   return (
     <div 
-      className="aspect-[4/3] overflow-hidden cursor-pointer relative"
+      className="aspect-[4/3] overflow-hidden cursor-pointer relative rounded-[2.5rem]"
       onClick={() => navigate(`/portfolio?project=${projectId}`)}
     >
       {images.map((img, idx) => (
-        <img 
+        <MediaRenderer 
           key={idx}
           src={img} 
           alt={`Project view ${idx + 1}`} 
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === currentIndex ? 'opacity-100' : 'opacity-0'} hover:scale-105`}
-          referrerPolicy="no-referrer"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === currentIndex ? 'opacity-100' : 'opacity-0'} hover:scale-105 rounded-[2.5rem]`}
         />
       ))}
     </div>
@@ -40,20 +41,64 @@ function AutoSlidingImage({ images, projectId }: { images: string[], projectId: 
 
 export default function Home() {
   const [recentProjects, setRecentProjects] = useState<any[]>([]);
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [firebaseError, setFirebaseError] = useState<string | null>(null);
 
   useEffect(() => {
     const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'), limit(2));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const projectsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setRecentProjects(projectsData);
+      setFirebaseError(null);
+    }, (error) => {
+      console.error('Projects list error:', error);
+      setFirebaseError('Missing permissions to read projects. Please update your Firebase Security Rules.');
     });
-    return () => unsubscribe();
+
+    const teamQ = query(collection(db, 'team'), orderBy('createdAt', 'asc'));
+    const unsubscribeTeam = onSnapshot(teamQ, (snapshot) => {
+      const teamData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setTeamMembers(teamData);
+      setFirebaseError(null);
+    }, (error) => {
+      console.error('Team list error:', error);
+      setFirebaseError('Missing permissions to read team members. Please update your Firebase Security Rules.');
+    });
+
+    return () => {
+      unsubscribe();
+      unsubscribeTeam();
+    };
   }, []);
 
   return (
     <div className="w-full">
+      {firebaseError && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4">
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg" role="alert">
+            <p className="font-bold">Database Permission Error</p>
+            <p>{firebaseError}</p>
+          </div>
+        </div>
+      )}
       {/* Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        {/* Left Edge Socials */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col">
+          <a href="https://www.facebook.com/share/1Bn6tgZi73/?mibextid=wwXIfr" target="_blank" rel="noreferrer" className="bg-[#3b5998] text-white p-3 hover:w-16 transition-all w-12 flex justify-end">
+            <Facebook className="w-6 h-6" />
+          </a>
+          <a href="https://www.instagram.com/ajinteriordesignstudio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noreferrer" className="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-3 hover:w-16 transition-all w-12 flex justify-end">
+            <Instagram className="w-6 h-6" />
+          </a>
+          <a href="https://youtube.com/@ajinteriordesignstudio?si=7n7oS6GKJoBh6uOg" target="_blank" rel="noreferrer" className="bg-[#ff0000] text-white p-3 hover:w-16 transition-all w-12 flex justify-end">
+            <Youtube className="w-6 h-6" />
+          </a>
+          <a href="https://wa.me/919494338332" target="_blank" rel="noreferrer" className="bg-[#25D366] text-white p-3 hover:w-16 transition-all w-12 flex justify-end">
+            <MessageCircle className="w-6 h-6" />
+          </a>
+        </div>
+
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2000" 
@@ -73,14 +118,16 @@ export default function Home() {
           >
             Thoughtful Designs for Modern Homes
           </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="text-cream/80 text-lg md:text-xl font-light tracking-wide mb-10"
+            className="inline-block mb-10"
           >
-            Elevating spaces in Armoor, Nirmal, and Nizamabad.
-          </motion.p>
+            <p className="text-cream/90 text-xs md:text-sm font-medium tracking-[0.3em] uppercase px-8 py-3 border border-cream/10 bg-white/5 backdrop-blur-md rounded-full shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+              Elevating spaces in Armoor, Nirmal, and Nizamabad
+            </p>
+          </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -149,24 +196,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Instagram Highlight Section */}
-      <section className="py-24 px-6 md:px-12 bg-dark text-cream text-center">
-        <div className="max-w-3xl mx-auto">
-          <Instagram className="w-12 h-12 mx-auto mb-6 text-earth" />
-          <h2 className="text-3xl md:text-5xl mb-6">Follow Our Journey</h2>
-          <p className="text-cream/80 font-light text-lg mb-10">
-            Discover our latest projects, behind-the-scenes moments, and daily design inspiration on Instagram.
-          </p>
-          <a 
-            href="https://www.instagram.com/ajinteriordesignstudio" 
-            target="_blank" 
-            rel="noreferrer"
-            className="inline-flex items-center space-x-3 bg-cream text-dark px-8 py-4 uppercase tracking-widest text-sm hover:bg-earth hover:text-cream transition-colors duration-300"
-          >
-            <span>@ajinteriordesignstudio</span>
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </div>
+      {/* Get in Touch Card */}
+      <section className="py-16 px-6 md:px-12 bg-cream flex justify-center">
+        <Link 
+          to="/book" 
+          className="group relative overflow-hidden bg-white border border-taupe/30 p-10 md:p-16 max-w-3xl w-full flex flex-col items-center text-center hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 rounded-[3rem]"
+        >
+          <div className="absolute inset-0 bg-dark translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out rounded-[3rem]" />
+          <div className="relative z-10 group-hover:text-cream transition-colors duration-500">
+            <h2 className="text-3xl md:text-4xl mb-4 font-serif">Start Your Project</h2>
+            <p className="text-dark-muted group-hover:text-cream/80 font-light mb-8 transition-colors duration-500">
+              Get a personalized estimate and let's build your dream home together.
+            </p>
+            <span className="inline-flex items-center space-x-2 text-sm tracking-widest uppercase text-earth group-hover:text-cream transition-colors duration-500">
+              <span>Get in touch</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500" />
+            </span>
+          </div>
+        </Link>
       </section>
 
       {/* Team Section */}
@@ -181,14 +228,25 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {MOCK_TEAM.map((member) => (
+            {teamMembers.length > 0 ? teamMembers.map((member) => (
               <div key={member.id} className="text-center group">
-                <div className="mb-6 overflow-hidden aspect-[3/4] max-w-sm mx-auto">
-                  <img 
+                <div className="mb-6 overflow-hidden aspect-[3/4] max-w-sm mx-auto rounded-[2.5rem]">
+                  <MediaRenderer 
                     src={member.image} 
                     alt={member.name} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 rounded-[2.5rem]"
+                  />
+                </div>
+                <h3 className="text-2xl mb-2">{member.name}</h3>
+                <p className="text-sm tracking-widest uppercase text-earth">{member.role}</p>
+              </div>
+            )) : MOCK_TEAM.map((member) => (
+              <div key={member.id} className="text-center group">
+                <div className="mb-6 overflow-hidden aspect-[3/4] max-w-sm mx-auto rounded-[2.5rem]">
+                  <MediaRenderer 
+                    src={member.image} 
+                    alt={member.name} 
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 rounded-[2.5rem]"
                   />
                 </div>
                 <h3 className="text-2xl mb-2">{member.name}</h3>

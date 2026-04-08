@@ -1,20 +1,22 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function AdminLogin() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/admin/dashboard');
     } catch (err: any) {
       setError(err.message || 'Failed to authenticate');
@@ -33,13 +35,35 @@ export default function AdminLogin() {
           </div>
         )}
 
-        <button 
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full bg-dark text-cream py-4 uppercase tracking-widest text-sm disabled:opacity-50"
-        >
-          {loading ? 'Authenticating...' : 'Sign in with Google'}
-        </button>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label className="block text-sm uppercase tracking-widest mb-2">Admin Email</label>
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-transparent border-b border-dark/20 py-2 focus:outline-none focus:border-dark transition-colors"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm uppercase tracking-widest mb-2">Access Code</label>
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-transparent border-b border-dark/20 py-2 focus:outline-none focus:border-dark transition-colors"
+              required
+            />
+          </div>
+          <button 
+            type="submit"
+            disabled={loading}
+            className="w-full bg-dark text-cream py-4 uppercase tracking-widest text-sm disabled:opacity-50 mt-8"
+          >
+            {loading ? 'Authenticating...' : 'Enter Studio'}
+          </button>
+        </form>
       </div>
     </div>
   );

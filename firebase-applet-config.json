@@ -1,10 +1,9 @@
 {
-  "projectId": "gen-lang-client-0044603843",
-  "appId": "1:1010071219971:web:c3e3167e8ce1ed49a9c336",
-  "apiKey": "AIzaSyCfbKnEAEmcUC2EJKvkRJzM0LvVxEGoFkk",
-  "authDomain": "gen-lang-client-0044603843.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-29a3cbd1-f2d7-4037-bedd-053ee37cc239",
-  "storageBucket": "gen-lang-client-0044603843.firebasestorage.app",
-  "messagingSenderId": "1010071219971",
-  "measurementId": ""
+  "apiKey": "AIzaSyBFHbwlgNYLaPIaZrdkCN3VWJEy6W93Vvg",
+  "authDomain": "ajinteriors-328e6.firebaseapp.com",
+  "projectId": "ajinteriors-328e6",
+  "storageBucket": "ajinteriors-328e6.firebasestorage.app",
+  "messagingSenderId": "87038206074",
+  "appId": "1:87038206074:web:20b820e0669cbf0576dbc3",
+  "measurementId": "G-C8LEDVH0WJ"
 }

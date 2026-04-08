@@ -34,15 +34,30 @@ function Navbar() {
       )}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-        <Link to="/" className="flex items-center">
-          <img src="/logo.svg" alt="AJ Studio" className="h-12 w-auto object-contain" />
+        <Link to="/" className="flex items-center space-x-4 group">
+          <div className="relative">
+            <img src="/logo.svg" alt="AJ Studio" className="h-12 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-110" />
+            <div className="absolute -inset-2 bg-earth/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-serif text-xl md:text-2xl tracking-[0.2em] uppercase text-dark leading-none">AJ Studio</span>
+            <span className="text-[8px] tracking-[0.4em] uppercase text-earth mt-1 font-bold">Interior Design</span>
+          </div>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-12 items-center">
-          <Link to="/" className="text-sm tracking-widest uppercase hover:text-earth transition-colors">Home</Link>
-          <Link to="/portfolio" className="text-sm tracking-widest uppercase hover:text-earth transition-colors">Portfolio</Link>
-          <Link to="/book" className="text-sm tracking-widest uppercase hover:text-earth transition-colors">Get an Estimate</Link>
+        <div className="hidden md:flex space-x-16 items-center">
+          <Link to="/" className="text-[10px] tracking-[0.4em] uppercase hover:text-earth transition-colors relative group">
+            Home
+            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-earth transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link to="/portfolio" className="text-[10px] tracking-[0.4em] uppercase hover:text-earth transition-colors relative group">
+            Portfolio
+            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-earth transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link to="/book" className="bg-dark text-cream px-8 py-3 text-[10px] tracking-[0.4em] uppercase hover:bg-earth transition-all duration-500 rounded-full">
+            Get in touch
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -62,7 +77,7 @@ function Navbar() {
           >
             <Link to="/" className="text-lg font-serif tracking-wide">Home</Link>
             <Link to="/portfolio" className="text-lg font-serif tracking-wide">Portfolio</Link>
-            <Link to="/book" className="text-lg font-serif tracking-wide">Get an Estimate</Link>
+            <Link to="/book" className="text-lg font-serif tracking-wide">Get in touch</Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -72,28 +87,46 @@ function Navbar() {
 
 function Footer() {
   return (
-    <footer className="bg-dark text-cream py-20 px-6 md:px-12 relative">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-        <div>
-          <h3 className="font-serif text-2xl mb-6">AJ Interior Design Studio</h3>
-          <p className="text-cream/70 font-light max-w-sm">
-            Thoughtful designs for modern homes. Best interior designers in Armoor, Nirmal, Nizamabad.
-          </p>
+    <footer className="bg-dark text-cream pt-32 pb-12 px-6 md:px-12 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+          <div className="md:col-span-2">
+            <span className="text-[10px] tracking-[0.6em] uppercase text-earth mb-8 block font-bold">The Studio</span>
+            <h3 className="font-serif text-4xl md:text-6xl mb-8 leading-tight">Crafting <br/> Timeless <br/> Spaces.</h3>
+            <p className="text-cream/50 font-light max-w-sm text-lg leading-relaxed">
+              We transform modern houses into sanctuaries through the power of restraint and sophisticated design.
+            </p>
+          </div>
+          
+          <div>
+            <span className="text-[10px] tracking-[0.6em] uppercase text-earth mb-8 block font-bold">Connect</span>
+            <div className="space-y-4">
+              <p className="text-cream/70 font-light leading-relaxed">
+                MJ hospital road, Armoor, <br/> India 503224
+              </p>
+              <p className="text-cream/70 font-light">94943 38332</p>
+              <a href="mailto:hello@ajstudio.com" className="text-earth hover:text-cream transition-colors block font-light">hello@ajstudio.com</a>
+            </div>
+          </div>
+
+          <div>
+            <span className="text-[10px] tracking-[0.6em] uppercase text-earth mb-8 block font-bold">Explore</span>
+            <div className="flex flex-col space-y-4">
+              <Link to="/portfolio" className="text-cream/70 hover:text-cream transition-colors font-light">Portfolio</Link>
+              <a href="https://www.instagram.com/ajinteriordesignstudio" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-cream transition-colors font-light">Instagram</a>
+              <Link to="/admin" className="text-cream/70 hover:text-cream transition-colors font-light">Admin Portal</Link>
+            </div>
+          </div>
         </div>
-        <div>
-          <h4 className="text-sm tracking-widest uppercase mb-6 text-earth">Contact</h4>
-          <p className="text-cream/70 font-light mb-2">MJ hospital road, Armoor, India 503224</p>
-          <p className="text-cream/70 font-light">Call us: 94943 38332</p>
-        </div>
-        <div>
-          <h4 className="text-sm tracking-widest uppercase mb-6 text-earth">Links</h4>
-          <div className="flex flex-col space-y-2">
-            <a href="https://www.instagram.com/ajinteriordesignstudio" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-cream transition-colors font-light">
-              Instagram
-            </a>
-            <Link to="/admin" className="text-cream/70 hover:text-cream transition-colors font-light">
-              Admin Portal
-            </Link>
+
+        <div className="pt-12 border-t border-cream/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-4">
+            <span className="font-serif italic text-2xl text-cream/20">AJ Studio</span>
+            <span className="text-[8px] tracking-[0.4em] uppercase text-cream/20">© 2026 All Rights Reserved</span>
+          </div>
+          <div className="flex gap-8 text-[8px] tracking-[0.4em] uppercase text-cream/40">
+            <span className="hover:text-cream cursor-pointer transition-colors">Privacy Policy</span>
+            <span className="hover:text-cream cursor-pointer transition-colors">Terms of Service</span>
           </div>
         </div>
       </div>

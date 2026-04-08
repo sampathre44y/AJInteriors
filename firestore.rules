@@ -18,6 +18,15 @@ service cloud.firestore {
     //   - createdAt: timestamp (required, immutable)
     //   - authorUid: string (required, immutable)
     //
+    // Collection: team
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, max 100 chars)
+    //   - role: string (required, max 100 chars)
+    //   - image: string (required, valid URL)
+    //   - createdAt: timestamp (required, immutable)
+    //   - authorUid: string (required, immutable)
+    //
     // Collection: users
     // Document ID: user UID
     // Fields:
@@ -37,7 +46,8 @@ service cloud.firestore {
       return isAuthenticated() && (
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
-        (request.auth.token.email == "sampathre44y@gmail.com" && request.auth.token.email_verified == true)
+        (request.auth.token.email == "sampathre44y@gmail.com") ||
+        (request.auth.token.email == "ajinterior@gmail.com")
       );
     }
 
@@ -77,6 +87,15 @@ service cloud.firestore {
              data.authorUid is string && data.authorUid == request.auth.uid;
     }
 
+    function isValidTeamMember(data) {
+      return hasOnlyAllowedFields(['name', 'role', 'image', 'createdAt', 'authorUid']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.role is string && data.role.size() > 0 && data.role.size() <= 100 &&
+             data.image is string && isValidUrl(data.image) &&
+             data.createdAt is timestamp &&
+             data.authorUid is string && data.authorUid == request.auth.uid;
+    }
+
     function isValidUser(data) {
       return hasOnlyAllowedFields(['email', 'role']) &&
              data.email is string && isValidEmail(data.email) &&
@@ -91,6 +110,15 @@ service cloud.firestore {
       allow read: if true;
       allow create: if isAdmin() && isValidProject(request.resource.data);
       allow update: if isAdmin() && isValidProject(request.resource.data) &&
+                    request.resource.data.createdAt == resource.data.createdAt &&
+                    request.resource.data.authorUid == resource.data.authorUid;
+      allow delete: if isAdmin();
+    }
+
+    match /team/{memberId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidTeamMember(request.resource.data);
+      allow update: if isAdmin() && isValidTeamMember(request.resource.data) &&
                     request.resource.data.createdAt == resource.data.createdAt &&
                     request.resource.data.authorUid == resource.data.authorUid;
       allow delete: if isAdmin();
